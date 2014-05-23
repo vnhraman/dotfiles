@@ -2,18 +2,30 @@ set nocompatible              " be iMproved, required
 filetype off                  " required
 
 " set the runtime path to include Vundle and initialize
-"
-" Linux
-"set rtp+=~/.vim/bundle/Vundle.vim
-"call vundle#begin()
-"
-" Windows
-set rtp+=$HOME/.vim/bundle/Vundle.vim/
-let path='$HOME/.vim/bundle'
-call vundle#begin(path)
 
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
+function! GetOS()
+    if has("win32")
+        return "windows"
+    endif
+    if has("unix")
+        if system('uname')=~'Darwin'
+            return "mac"
+        else
+            return "linux"
+        endif
+    endif
+endfunction
+
+let os=GetOS()
+
+if os=="linux"
+    set rtp+=~/.vim/bundle/Vundle.vim
+    call vundle#begin()
+elseif os == "windows"
+    set rtp+=$HOME/.vim/bundle/Vundle.vim/
+    let path='$HOME/.vim/bundle'
+    call vundle#begin(path)
+endif
 
 " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'
@@ -380,12 +392,12 @@ if has("gui_running")
     set guitablabel=%M\ %t
 else
   " This is console Vim.
-  if exists("+lines")
-    set lines=50
-  endif
-  if exists("+columns")
-    set columns=100
-  endif
+" if exists("+lines")
+"   set lines=50
+" endif
+" if exists("+columns")
+"   set columns=100
+" endif
 endif
 
 "set encoding=utf8
