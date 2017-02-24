@@ -1,3 +1,6 @@
+scriptencoding utf-8
+set encoding=utf-8
+
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
@@ -18,17 +21,17 @@ endfunction
 
 let os=GetOS()
 
-if os=="linux"
-    set rtp+=~/.vim/bundle/Vundle.vim
-    call vundle#begin()
-elseif os == "windows"
+if os == "windows"
     set rtp+=$HOME/.vim/bundle/Vundle.vim/
     let path='$HOME/.vim/bundle'
     call vundle#begin(path)
+else
+    set rtp+=~/.vim/bundle/Vundle.vim
+    call vundle#begin()
 endif
 
 " let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim'
+Plugin 'VundleVim/Vundle.vim'
 
 " The following are examples of different formats supported.
 " Keep Plugin commands between vundle#begin/end.
@@ -60,81 +63,51 @@ Bundle 'Townk/vim-autoclose'
 Bundle 'vim-scripts/Align'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'kien/rainbow_parentheses.vim'
+"Bundle 'Valloric/YouCompleteMe'
+Plugin 'flazz/vim-colorschemes'
+Plugin 'octol/vim-cpp-enhanced-highlight'
 
 " plugin from http://vim-scripts.org/vim/scripts.html
 Bundle 'L9'
 Bundle 'FuzzyFinder'
 
-" plugin not on GitHub
-" Bundle 'git://git.wincent.com/command-t.git'
-
-" git repos on your local machine (i.e. when working on your own plugin)
-"Plugin 'file:///home/gmarik/path/to/plugin'
-
-" Avoid a name conflict with L9
-"Plugin 'user/L9', {'name': 'newL9'}
-
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
-filetype plugin indent on    " required
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
+
+syntax enable
+filetype plugin indent on
 "
 " Brief help
-" :PluginList          - list configured plugins
-" :PluginInstall(!)    - install (update) plugins
-" :PluginSearch(!) foo - search (or refresh cache first) for foo
-" :PluginClean(!)      - confirm (or auto-approve) removal of unused plugins
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
 "
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
 
-set diffexpr=MyDiff()
-function MyDiff()
-  let opt = '-a --binary '
-  if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
-  if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
-  let arg1 = v:fname_in
-  if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
-  let arg2 = v:fname_new
-  if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
-  let arg3 = v:fname_out
-  if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
-  let eq = ''
-  if $VIMRUNTIME =~ ' '
-    if &sh =~ '\<cmd'
-      let cmd = '""' . $VIMRUNTIME . '\diff"'
-      let eq = '"'
-    else
-      let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
-    endif
-  else
-    let cmd = $VIMRUNTIME . '\diff'
-  endif
-  silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3 . eq
-endfunction
+set nocompatible
 
-syntax enable
+" Enable modeline for individual file specific settings"
+set modeline
 
-
-" My settings
+"My .vimrc
 let mapleader = "\\"
 
-"------------------------------------
-" VIM USER INTERFACE
-"------------------------------------
-
-" Set cursor to stop 3 lines from the vertical ends
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => VIM user interface
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Set 3 lines to the cursor - when moving vertically using j/k
 set so=4
 
-" Turn on the wild menu, which I have no idea about
+" Turn on the WiLd menu
 set wildmenu
 set wildmode=list:longest,full
 
-" Ignore compiles files
+" Ignore compiled files
 set wildignore=*.o,*~,*.gch,*.pyc,*.jpg,*.gif,*.png
 
-" Show current cursor position
+"Always show current position
 set ruler
 
 " Height of the command bar
@@ -150,16 +123,15 @@ set whichwrap+=<,>,h,l
 " No idea what this does
 set nostartofline
 
-" List the tab spaces and trailing characters as below
-"set list
-"set listchars=tab:>,trail:.
-"set listchars=tab:▸\ ,eol:¬, trail:·
-"set listchars=tab:▸\ ,eol:·
+" List the tab spaces and trailing charaters as below
+set list
+" set listchars=tab:»·,trail:·
+" set listchars=tab:»·,eol:¬,trail:·,extends:↪,precedes:↩
+set listchars=tab:»·,trail:·,extends:↪,precedes:↩
 
 " Always show tabs (avoids frequent window resizing)
-set showtabline=2
+set showtabline=2 
 
-" Open new horizontal split below the current window
 " Open new horizontal split below the current window
 set splitbelow
 
@@ -184,9 +156,9 @@ set magic
 
 " Show matching brackets when text indicator is over them
 set showmatch
-
 " How many tenths of a second to blink when matching brackets
 set mat=2
+
 
 "" messages and info
 set shortmess=aoOstTI
@@ -216,9 +188,9 @@ set expandtab
 set smarttab
 
 " 1 tab == 4 spaces
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
 set textwidth=80
 set autoindent
 set smartindent
@@ -323,6 +295,7 @@ autocmd BufReadPost *
 " Remember info about open buffers on close
 set viminfo^=%
 
+
 """"""""""""""""""""""""""""""
 " => Status line
 """"""""""""""""""""""""""""""
@@ -385,7 +358,7 @@ endfunction
 if has("gui_running")
     " GUI is running or is about to start.
     " Maximize gvim window.
-    set lines=70 columns=250
+    set lines=70 columns=190
     set guioptions-=T
     set guioptions+=e
     set t_Co=256
@@ -399,9 +372,6 @@ else
 "   set columns=100
 " endif
 endif
-
-"set encoding=utf8
-"set ffs=unix
 
 "Map jj to Escape out of Insert Mode 
 inoremap jj <Esc>
@@ -444,14 +414,13 @@ nnoremap <leader>em :split ~/.vim/macros.vim<Cr>
 
 "Don't separate *.h from other files (as is done by default) in Explore
 let g:netrw_sort_sequence = "[\/]$,*,\.bak$,\.o$,\.info$,\.swp$,\.obj$"
-let g:netrw_list_hide = "\.swp$,\.o$,\.a$,\.so$,\.exe$"
+let g:netrw_list_hide = "\.swp$,\.o$,\.a$,\.so$"
 
 " Don't redraw while executing macros (good performance config)
 set lazyredraw
 
 " Shortcuts used too freqently.
 " Typing LHS will replace it with RHS
-iabbrev me myself
 
 " Surround the current word with double quotes
 nnoremap <Leader>" viw<Esc>a"<Esc>hbi"<Esc>lel
@@ -463,15 +432,37 @@ inoremap <A-r> <Esc>mzyiw:%s//\=@0/g<Cr>`za
 nnoremap <A-r> mzyiw:%s//\=@0/g<Cr>`z
 
 " YouCompleteMe
-"let g:ycm_confirm_extra_conf = 0
-"let g:ycm_global_ycm_extra_conf = "~/.vim/config/.ycm_extra_conf.py"
-"let g:ycm_autoclose_preview_window_after_insertion = 1
+" let g:ycm_auto_trigger = 0
+" let g:ycm_confirm_extra_conf = 0
+" let g:ycm_global_ycm_extra_conf = "~/.vim/config/.config_extra_conf.py"
+" let g:ycm_autoclose_preview_window_after_insertion = 1
+"
+" 
+" let g:ycm_filetype_whitelist = { 'cpp': 0, 'py': 1, 'h': 0}
+" 
+" let g:ycm_filetype_blacklist = {
+"   \ 'tagbar' : 1,
+"   \ 'qf' : 1,
+"   \ 'notes' : 1,
+"   \ 'markdown' : 1,
+"   \ 'unite' : 1,
+"   \ 'text' : 1,
+"   \ 'vimwiki' : 1,
+"   \ 'pandoc' : 1,
+"   \ 'infolog' : 1,
+"   \ 'mail' : 1
+"   \}
+
 
 " Syntastic
-"let g:syntastic_always_populate_loc_list = 1
-"let g:syntastic_cpp_check_header = 1
-"let g:syntastic_cpp_checkers=['gcc']
-" let g:syntastic_cpp_include_dirs = ['']
+"
+" Jump to errors with ']'/'[' and lowercase 'L'
+"
+let g:syntastic_always_populate_loc_list = 1
+
+" C++
+let g:syntastic_cpp_check_header = 1
+let g:syntastic_cpp_checkers=['gcc']
 
 " snipMate
 " :h snipMate-mappings
@@ -481,9 +472,9 @@ nnoremap <A-r> mzyiw:%s//\=@0/g<Cr>`z
 "<Plug>snipMateVisual            Default: <Tab>          Mode: Visual
 
 " Put these here, didn't work. Putting them in vim-snipmate-master/after/plugin/snipMate.vim
-"inoremap <Leader><Tab> <Plug>snipMateNextOrTrigger
-"snoremap <Leader><Tab> <Plug>snipMateNextOrTrigger
-"vnoremap <Leader><Tab> <Plug>snipMateVisual
+" inoremap <Leader><Tab> <Plug>snipMateNextOrTrigger
+" snoremap <Leader><Tab> <Plug>snipMateNextOrTrigger
+" vnoremap <Leader><Tab> <Plug>snipMateVisual
 
 
 ""20 command line editing
@@ -494,33 +485,15 @@ set history=100
 "endif
 
 "Color Schemes
-"set background=light
-"colorscheme pyte
-"colorscheme ir_black
-"colorscheme desert
-
-"colorscheme morning
-colorscheme evening
-"colorscheme wombat256
-"color jellybeans
-
-" For vim-colors-solarized
-" Option 1
-"set background=dark
-"colorscheme solarized
-" Option 2
-"set background=light
-"colorscheme solarized
-
-"For peaksea
-" feel free to choose :set background=light for a different style 
-"set background=dark
-"set background=light
-"colors peaksea
+colorscheme molokai
 
 "Font
-set guifont=Consolas:h10:cANSI
-"set guifont=Monospace\ 11
+if os == "windows"
+  " set guifont=Consolas:h12:cANSI
+  set guifont=Inconsolata:h12:cANSI
+else
+  set guifont=Monospace\ 10
+endif
 
 if exists(":Tabularize")
     nnoremap <Leader>a= :Tabularize /=<CR>
@@ -532,8 +505,10 @@ endif
 nnoremap <F5> :filetype detect<Cr>
 inoremap <F5> <Esc>mz:filetype detect<Cr>`z
 
-" source ~/.vim/marvim/marvim.vim
-" let marvim_store='~/.vim/marvim'
+if os != "windows"
+  source ~/.vim/marvim/marvim.vim
+  let marvim_store='~/.vim/marvim'
+endif
 
 nnoremap <C-Tab> :tabn<Cr>
 nnoremap <C-S-Tab> :tabp<Cr>
@@ -541,29 +516,70 @@ nnoremap <C-S-Tab> :tabp<Cr>
 " Tabman settings"
 " Change the default mappings:
 
-" let g:tabman_toggle = '<leader>mt'
-" let g:tabman_focus  = '<leader>mf'
+let g:tabman_toggle = '<leader>mt'
+let g:tabman_focus  = '<leader>mf'
 
 " Change the width of the TabMan window:
-" let g:tabman_width = 25
+let g:tabman_width = 25
 
 " And the position:
-" let g:tabman_side = 'left'
+let g:tabman_side = 'left'
 
 " Set this to 1 to show windows created by plugins, help and quickfix:
-" let g:tabman_specials = 0
+let g:tabman_specials = 0
 
 " Set this to 0 to disable line numbering in the TabMan window:
-" let g:tabman_number = 1
+let g:tabman_number = 1
 
-" Git gutter settings"
+" Git gutter settings, too slow, disable.
 let g:gitgutter_enabled = 0
-let g:gitgutter_signs = 0
-let g:gitgutter_realtime = 0
-let g:gitgutter_eager = 0
+"let g:gitgutter_signs = 0
+"let g:gitgutter_realtime = 0
+"let g:gitgutter_eager = 0
+
+" Rainbow Parentheses"
+let g:rbpt_colorpairs = [
+    \ ['brown',       'RoyalBlue3'],
+    \ ['Darkblue',    'SeaGreen3'],
+    \ ['darkgray',    'DarkOrchid3'],
+    \ ['darkgreen',   'firebrick3'],
+    \ ['darkcyan',    'RoyalBlue3'],
+    \ ['darkred',     'SeaGreen3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['brown',       'firebrick3'],
+    \ ['gray',        'RoyalBlue3'],
+    \ ['black',       'SeaGreen3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['Darkblue',    'firebrick3'],
+    \ ['darkgreen',   'RoyalBlue3'],
+    \ ['darkcyan',    'SeaGreen3'],
+    \ ['darkred',     'DarkOrchid3'],
+    \ ['red',         'firebrick3'],
+    \ ]
+
+let g:rbpt_max = 16
+let g:rbpt_loadcmd_toggle = 0
 
 " Quick write session with F6
 map <F6> :mksession! ~/.vim/last.session <cr>
 
 " And load session with F7
 map <F7> :source ~/.vim/last.session <cr>
+
+" Disable scrollbars and tab button bar.
+setglobal guioptions-=L
+setglobal guioptions-=l
+setglobal guioptions-=R
+setglobal guioptions-=r
+setglobal guioptions-=b
+setglobal guioptions-=h
+
+" Disable tab button bar.
+"setglobal guioptions-=e
+
+" Settings for octol/vim-cpp-enhanced-highlight
+let g:cpp_class_scope_highlight = 1
+"let g_cpp_experimental_template_highlight = 1
+
+
+
