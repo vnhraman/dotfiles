@@ -1,0 +1,7 @@
+#!/bin/bash
+
+function git-update-commit-date() {
+  local DATE_STR=`date`
+  GIT_COMMITTER_DATE="${DATE_STR}" git commit --amend --date "${DATE_STR}"
+}
+

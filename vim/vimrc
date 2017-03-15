@@ -1,10 +1,75 @@
 scriptencoding utf-8
 set encoding=utf-8
+set nocompatible
 
-set nocompatible              " be iMproved, required
-filetype off                  " required
+"===============================================================================
+" vim-plug plugin manager config.
 
-" set the runtime path to include Vundle and initialize
+" Specify a directory for plugins (for Neovim: ~/.local/share/nvim/plugged)
+call plug#begin('~/.vim/plugged')
+
+" Use single quotes for all arguments to Plug
+
+Plug 'vim-scripts/Align'
+Plug 'godlygeek/tabular'
+Plug 'Lokaltog/vim-easymotion'
+Plug 'vim-airline/vim-airline'
+
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-markdown'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-ragtag'
+Plug 'tpope/vim-repeat'
+
+Plug 'MarcWeber/vim-addon-mw-utils'
+Plug 'tomtom/tlib_vim'
+Plug 'garbas/vim-snipmate'
+Plug 'honza/vim-snippets'
+Plug 'SirVer/ultisnips'
+
+Plug 'scrooloose/nerdcommenter'
+Plug 'kien/rainbow_parentheses.vim'
+Plug 'flazz/vim-colorschemes'
+Plug 'octol/vim-cpp-enhanced-highlight'
+Plug 'tmux-plugins/vim-tmux'
+
+" Plugin outside ~/.vim/plugged with post-update hook
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+
+function! BuildYCM(info)
+  " info is a dictionary with 3 fields
+  " - name:   name of the plugin
+  " - status: 'installed', 'updated', or 'unchanged'
+  " - force:  set on PlugInstall! or PlugUpdate!
+  if a:info.status == 'installed' || a:info.force
+    !./install.py --clang-completer
+  endif
+endfunction
+
+Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
+
+" Initialize plugin system
+call plug#end()
+
+" Brief help
+" PlugInstall [name ...] [#threads]   Install plugins
+" PlugUpdate [name ...] [#threads]    Install or update plugins
+" PlugClean[!]                        Remove unused directories (bang version
+"                                     will clean without prompt)
+" PlugUpgrade                         Upgrade vim-plug itself
+" PlugStatus                          Check the status of plugins
+" PlugDiff                            Examine changes from the previous update
+"                                     and the pending changes
+" PlugSnapshot[!] [output path]       Generate script for restoring the current
+"                                     snapshot of the plugins
+"-------------------------------------------------------------------------------
+
+"========================================================================================
+"My .vimrc
+
+syntax enable
+filetype plugin indent on
+let mapleader = "\<Space>"
 
 function! GetOS()
     if has("win32")
@@ -21,82 +86,21 @@ endfunction
 
 let os=GetOS()
 
-if os == "windows"
-    set rtp+=$HOME/.vim/bundle/Vundle.vim/
-    let path='$HOME/.vim/bundle'
-    call vundle#begin(path)
-else
-    set rtp+=~/.vim/bundle/Vundle.vim
-    call vundle#begin()
-endif
-
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
-
-" The following are examples of different formats supported.
-" Keep Plugin commands between vundle#begin/end.
-
-" plugin on GitHub repo
-Plugin 'tpope/vim-fugitive'
-Bundle 'Lokaltog/vim-easymotion'
-" The sparkup vim script is in a subdirectory of this repo called vim.
-" Pass the path to set the runtimepath properly.
-Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
-
-"Added by me
-Bundle "scrooloose/syntastic"
-Bundle "MarcWeber/vim-addon-mw-utils"
-Bundle "tomtom/tlib_vim"
-Bundle 'garbas/vim-snipmate'
-Bundle "honza/vim-snippets"
-Bundle 'Lokaltog/vim-powerline'
-Bundle 'vim-scripts/peaksea'
-Bundle 'altercation/vim-colors-solarized'
-Bundle 'wgibbs/vim-irblack'
-Bundle 'therubymug/vim-pyte'
-Bundle 'kchmck/vim-coffee-script'
-Bundle 'groenewege/vim-less'
-Bundle 'tpope/vim-markdown'
-Bundle 'tpope/vim-surround'
-Bundle 'tpope/vim-ragtag'
-Bundle 'Townk/vim-autoclose'
-Bundle 'vim-scripts/Align'
-Bundle 'scrooloose/nerdcommenter'
-Bundle 'kien/rainbow_parentheses.vim'
-"Bundle 'Valloric/YouCompleteMe'
-Plugin 'flazz/vim-colorschemes'
-Plugin 'octol/vim-cpp-enhanced-highlight'
-
-" plugin from http://vim-scripts.org/vim/scripts.html
-Bundle 'L9'
-Bundle 'FuzzyFinder'
-
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-
-syntax enable
-filetype plugin indent on
-"
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
-
-set nocompatible
-
 " Enable modeline for individual file specific settings"
 set modeline
 
-"My .vimrc
-let mapleader = "\\"
+" Force 256 color
+set term=screen-256color
+set t_Co=256
+set t_ut=
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" Enable mouse
+set mouse=a
+
 " Set 3 lines to the cursor - when moving vertically using j/k
 set so=4
 
@@ -194,15 +198,6 @@ set softtabstop=2
 set textwidth=80
 set autoindent
 set smartindent
-"set cinoptions=:0.5s,=0.5s,l1,g0.5s,h0.5s,t0,i0,(0
-"               |     |     |  |     |     |  |  +-- indent from unclosed parens
-"               |     |     |  |     |     |  +-- C++ base class decls and initializations
-"               |     |     |  |     |     +-- indent function return type at margin
-"               |     |     |  |     +-- places statements after C++ scope decls
-"               |     |     |  +--  place C++ scope declarations
-"               |     |     +-- align with case label instead of statement
-"               |     +-- place statements after case label
-"               +-- placement of case after switch statement
 
 " Commenting this out as it is not compatible with vi"
 " folding
@@ -361,7 +356,6 @@ if has("gui_running")
     set lines=70 columns=190
     set guioptions-=T
     set guioptions+=e
-    set t_Co=256
     set guitablabel=%M\ %t
 else
   " This is console Vim.
@@ -374,13 +368,10 @@ else
 endif
 
 "Map jj to Escape out of Insert Mode 
-inoremap jj <Esc>
+inoremap jk <Esc>
 
 "Set current working directory to change on window enter.
 autocmd BufEnter * silent! lcd %:p:h
-
-"Map <Tab> in normal mode to do tabbing
-nnoremap <Tab> i<Tab><Esc>l
 
 "Map <Cr> in normal mode to insert a line
 nnoremap <Cr> o<Esc>
@@ -410,7 +401,6 @@ nnoremap <A-l> viwu
 nnoremap <leader>ev :tabe $MYVIMRC<Cr>
 " Quickly source VIMRC to apply settings
 nnoremap <leader>sv :source $MYVIMRC<Cr>
-nnoremap <leader>em :split ~/.vim/macros.vim<Cr>
 
 "Don't separate *.h from other files (as is done by default) in Explore
 let g:netrw_sort_sequence = "[\/]$,*,\.bak$,\.o$,\.info$,\.swp$,\.obj$"
@@ -430,51 +420,6 @@ vnoremap <Leader>" <Esc>a"<Esc>`<i"<Esc>
 " Search and replace the previous word with the word last searched for
 inoremap <A-r> <Esc>mzyiw:%s//\=@0/g<Cr>`za
 nnoremap <A-r> mzyiw:%s//\=@0/g<Cr>`z
-
-" YouCompleteMe
-" let g:ycm_auto_trigger = 0
-" let g:ycm_confirm_extra_conf = 0
-" let g:ycm_global_ycm_extra_conf = "~/.vim/config/.config_extra_conf.py"
-" let g:ycm_autoclose_preview_window_after_insertion = 1
-"
-" 
-" let g:ycm_filetype_whitelist = { 'cpp': 0, 'py': 1, 'h': 0}
-" 
-" let g:ycm_filetype_blacklist = {
-"   \ 'tagbar' : 1,
-"   \ 'qf' : 1,
-"   \ 'notes' : 1,
-"   \ 'markdown' : 1,
-"   \ 'unite' : 1,
-"   \ 'text' : 1,
-"   \ 'vimwiki' : 1,
-"   \ 'pandoc' : 1,
-"   \ 'infolog' : 1,
-"   \ 'mail' : 1
-"   \}
-
-
-" Syntastic
-"
-" Jump to errors with ']'/'[' and lowercase 'L'
-"
-let g:syntastic_always_populate_loc_list = 1
-
-" C++
-let g:syntastic_cpp_check_header = 1
-let g:syntastic_cpp_checkers=['gcc']
-
-" snipMate
-" :h snipMate-mappings
-"<Plug>snipMateNextOrTrigger     Default: <Tab>          Mode: Insert, Select
-"<Plug>snipMateBack              Default: <S-Tab>        Mode: Insert, Select
-"<Plug>snipMateShow              Default: <C-R><Tab>     Mode: Insert
-"<Plug>snipMateVisual            Default: <Tab>          Mode: Visual
-
-" Put these here, didn't work. Putting them in vim-snipmate-master/after/plugin/snipMate.vim
-" inoremap <Leader><Tab> <Plug>snipMateNextOrTrigger
-" snoremap <Leader><Tab> <Plug>snipMateNextOrTrigger
-" vnoremap <Leader><Tab> <Plug>snipMateVisual
 
 
 ""20 command line editing
@@ -505,31 +450,13 @@ endif
 nnoremap <F5> :filetype detect<Cr>
 inoremap <F5> <Esc>mz:filetype detect<Cr>`z
 
-if os != "windows"
-  source ~/.vim/marvim/marvim.vim
-  let marvim_store='~/.vim/marvim'
-endif
+" if os != "windows"
+"   source ~/.vim/marvim/marvim.vim
+"   let marvim_store='~/.vim/marvim'
+" endif
 
-nnoremap <C-Tab> :tabn<Cr>
-nnoremap <C-S-Tab> :tabp<Cr>
-
-" Tabman settings"
-" Change the default mappings:
-
-let g:tabman_toggle = '<leader>mt'
-let g:tabman_focus  = '<leader>mf'
-
-" Change the width of the TabMan window:
-let g:tabman_width = 25
-
-" And the position:
-let g:tabman_side = 'left'
-
-" Set this to 1 to show windows created by plugins, help and quickfix:
-let g:tabman_specials = 0
-
-" Set this to 0 to disable line numbering in the TabMan window:
-let g:tabman_number = 1
+nnoremap <Tab> :tabn<Cr>
+nnoremap <S-Tab> :tabp<Cr>
 
 " Git gutter settings, too slow, disable.
 let g:gitgutter_enabled = 0
@@ -561,10 +488,10 @@ let g:rbpt_max = 16
 let g:rbpt_loadcmd_toggle = 0
 
 " Quick write session with F6
-map <F6> :mksession! ~/.vim/last.session <cr>
+map <F6> :mksession! ~/.vim/sessions/last.session <cr>
 
 " And load session with F7
-map <F7> :source ~/.vim/last.session <cr>
+map <F7> :source ~/.vim/sessions/last.session <cr>
 
 " Disable scrollbars and tab button bar.
 setglobal guioptions-=L
@@ -577,9 +504,73 @@ setglobal guioptions-=h
 " Disable tab button bar.
 "setglobal guioptions-=e
 
-" Settings for octol/vim-cpp-enhanced-highlight
+"===============================================================================
+" octol/vim-cpp-enhanced-highlight options
+"===============================================================================
 let g:cpp_class_scope_highlight = 1
-"let g_cpp_experimental_template_highlight = 1
+let g_cpp_experimental_template_highlight = 1
+"-------------------------------------------------------------------------------
 
+"===============================================================================
+" YouCompleteMe options
+"===============================================================================
+
+let g:ycm_global_ycm_extra_conf = "~/.vim/config/ycm_extra_config.global.py"
+let g:ycm_confirm_extra_conf = 1
+let g:ycm_autoclose_preview_window_after_insertion = 1
+
+let g:Show_diagnostics_ui = 1 "default 1
+
+"will put icons in Vim's gutter on lines that have a diagnostic set.
+"Turning this off will also turn off the YcmErrorLine and YcmWarningLine
+"highlighting
+let g:ycm_enable_diagnostic_signs = 1
+let g:ycm_enable_diagnostic_highlighting = 0
+let g:ycm_always_populate_location_list = 1 "default 0
+let g:ycm_open_loclist_on_ycm_diags = 1 "default 1
+
+
+let g:ycm_complete_in_strings = 1 "default 1
+let g:ycm_collect_identifiers_from_tags_files = 0 "default 0
+let g:ycm_path_to_python_interpreter = '' "default ''
+
+
+let g:ycm_server_use_vim_stdout = 0 "default 0 (logging to console)
+let g:ycm_server_log_level = 'info' "default info
+
+" Other options include [ 'same-buffer', 'horizontal-split', 'vertical-split', 'new-tab' ]
+let g:ycm_goto_buffer_command = 'same-buffer' 
+
+let g:ycm_filetype_whitelist = { '*': 1 }
+let g:ycm_key_invoke_completion = '<C-Space>'
+
+nnoremap <F11> :YcmForceCompileAndDiagnostics <CR>
+
+let g:ycm_filetype_blacklist = {
+  \ 'tagbar' : 1,
+  \ 'qf' : 1,
+  \ 'notes' : 1,
+  \ 'markdown' : 1,
+  \ 'unite' : 1,
+  \ 'text' : 1,
+  \ 'vimwiki' : 1,
+  \ 'pandoc' : 1,
+  \ 'infolog' : 1,
+  \ 'mail' : 1
+  \}
+
+"-------------------------------------------------------------------------------
+
+"===============================================================================
+" Syntastic options - Disabled 2017-03-14
+"===============================================================================
+
+"" " Jump to errors with ']'/'[' and lowercase 'L'
+"" let g:syntastic_always_populate_loc_list = 1
+"" 
+"" " C++
+"" let g:syntastic_cpp_check_header = 1
+"" let g:syntastic_cpp_checkers=['g++']
+"-------------------------------------------------------------------------------
 
 
