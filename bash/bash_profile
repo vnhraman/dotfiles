@@ -1,4 +1,9 @@
 source ~/.profile
 source ~/.bashrc
 
-eval `keychain --eval --agents ssh github.com/id_rsa.vvnraman`
+for F in `find ~/.ssh -type f -name "id_rsa"`;
+do
+  eval `keychain --eval --agents ssh ${F}`
+done
+
+echo "`date` - bash loaded."
