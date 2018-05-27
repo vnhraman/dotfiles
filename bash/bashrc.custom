@@ -1,3 +1,8 @@
-#!/bin/bash
+# vim: set filetype=sh : */
+# Set command line to vi mode
 set -o vi
 
+# Export display variable for launching x11 apps in VcXsrv on Windows.
+export DISPLAY=localhost:0.0
+
+echo "`date` - bashrc custom."

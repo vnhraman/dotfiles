@@ -1,0 +1,17 @@
+# vim: set filetype=sh : */
+
+# Remove entries from path which starts with a windows drive letter.
+IFS=':' # Internal field separator
+NEWPATH=''
+
+for entry in ${PATH[@]}
+do
+  if [ "${entry:0:5}" != "/mnt/" ]; then
+    NEWPATH+=":$entry"
+  fi
+done
+IFS=' '
+
+export PATH="${NEWPATH:1}"
+
+echo "`date` - bashrc.wsl."

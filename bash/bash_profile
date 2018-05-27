@@ -1,9 +1,9 @@
+# vim: set filetype=sh : */
 source ~/.profile
-source ~/.bashrc
 
 for F in `find ~/.ssh -type f -name "id_rsa"`;
 do
   eval `keychain --eval --agents ssh ${F}`
 done
 
-echo "`date` - bash loaded."
+echo "`date` - bash profile."

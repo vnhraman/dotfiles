@@ -34,6 +34,9 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/vim-easy-align'
 Plug 'junegunn/goyo.vim'
 
+Plug 'mattn/emmet-vim'
+Plug 'pangloss/vim-javascript'
+
 function! BuildYCM(info)
   " info is a dictionary with 3 fields
   " - name:   name of the plugin

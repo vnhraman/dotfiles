@@ -7,7 +7,7 @@ else
 endif
 
 "Color Schemes
-silent! colorscheme molokai
+silent colorscheme molokai
 
 " Set extra options when running in GUI mode
 if has("gui_running")
