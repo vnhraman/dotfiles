@@ -6,4 +6,7 @@ do
   eval `keychain --eval --agents ssh ${F}`
 done
 
+# Add nodejs/bin to path at the end.
+export PATH="$PATH:~/.npm-global/bin"
+
 echo "`date` - bash profile."

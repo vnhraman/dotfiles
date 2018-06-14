@@ -20,7 +20,4 @@ fi
 # set PATH so it includes user's private bin directories
 PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 
-# Add nodejs/bin to path at the end.
-PATH="$PATH:~/.npm-global/bin"
-
 echo "`date` - profile."
