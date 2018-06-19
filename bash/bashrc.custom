@@ -4,5 +4,6 @@ set -o vi
 
 # Export display variable for launching x11 apps in VcXsrv on Windows.
 export DISPLAY=localhost:0.0
+export DOCKER_HOST=tcp://0.0.0.0:2375
 
 echo "`date` - bashrc custom."
